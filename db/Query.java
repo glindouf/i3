@@ -12,6 +12,11 @@ import java.util.ArrayList;
  * @author phcr
  */
 public class Query {
+
+    static DefaultTableModel model = new DefaultTableModel();
+    static ResultSet rs;
+    public static JScrollPane scroll;
+    public static JFrame frame = new JFrame();
     
     public static Member memberFromRS(ResultSet rs) throws SQLException {
         Member m = new Member();
@@ -119,9 +124,9 @@ public class Query {
         ArrayList<String> teams = new ArrayList<>();
 
         try {
-            Statement stmnt = Connect.ConnectDB().createStatement();
+            Statement s = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT givenName FROM team");
-            ResultSet rs = stmnt.executeQuery(query);
+            ResultSet rs = s.executeQuery(query);
             
             while (rs.next()) {
                 teams.add(rs.getString("givenName"));
