@@ -84,10 +84,11 @@ public class Member {
         this.active = active;
     }
 
-    @ Override   
+/*    @ Override   
     public String toString() {
+
         return String.format(
-                "\nid:\t%s\ngivenName:\t%s\nfamilyName:\t%s\nemail:\t%s\ngender:\t%d\nbirth:\t%d\nmemberSince:\t%d\nactive:\t%b",
+               "\nid:\t%s\ngivenName:\t%s\nfamilyName:\t%s\nemail:\t%s\ngender:\t%d\nbirth:\t%d\nmemberSince:\t%d\nactive:\t%b",
                 this.id,
                 this.givenName,
                 this.familyName,
@@ -97,6 +98,20 @@ public class Member {
                 this.memberSince,
                 this.active
         );
+    }
+    */
+
+     @Override
+    public String toString(){
+    
+    return      id + "," + 
+                familyName + "," + 
+                givenName + "," + 
+                birth + "," + 
+                this.memberSince + "," + 
+                this.gender + "," + 
+                this.email + "," + 
+                this.active;
     }
     
 }
