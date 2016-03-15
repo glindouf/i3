@@ -102,10 +102,10 @@ public class MemberTableModel extends AbstractTableModel implements TableModelLi
                 value = m.getId();
                 break;
             case 1:
-                value = m.getName();
+                value = m.getFamilyName();
                 break;
             case 2:
-                value = m.getSurname();
+                value = m.getGivenName();
                 break;
             case 3:
                 value = m.getEmail();
