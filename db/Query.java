@@ -29,8 +29,8 @@ public class Query {
     /** Insert **/    
     public static boolean insertMember(Register m) throws Exception {
         try {
-            CreateConnection.createConnection().setAutoCommit(false);
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Connect.ConnectDB().setAutoCommit(false);
+            Statement stmnt = Connect.ConnectDB().createStatement();
             int active = (m.isActive()) ? 1 : 0;
             boolean hasTeam = m.getTeam() != null && !m.getTeam().equals("");
             
@@ -58,8 +58,8 @@ public class Query {
                         }
                         case 2: { // Coach 
                             if (!hasTeam) {
-                                CreateConnection.createConnection().rollback();
-                                CreateConnection.createConnection().setAutoCommit(true);
+                                Connect.ConnectDB().rollback();
+                                Connect.ConnectDB().setAutoCommit(true);
                                 Exception ex = new Exception("Coach must have a team", null);
                                 throw ex;
                             }
@@ -72,25 +72,25 @@ public class Query {
             }            
         } catch (SQLException e) {
             System.out.println(e);
-            CreateConnection.createConnection().rollback();
-            CreateConnection.createConnection().setAutoCommit(true);
+            Connect.ConnectDB().rollback();
+            Connect.ConnectDB().setAutoCommit(true);
             return false;
         }
-        CreateConnection.createConnection().commit();
-        CreateConnection.createConnection().setAutoCommit(true);
+        Connect.ConnectDB().commit();
+        Connect.ConnectDB().setAutoCommit(true);
         return true;
     }
     
     public static void insertTeam(String team) throws SQLException {
         try {
-            CreateConnection.createConnection().setAutoCommit(false);
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Connect.ConnectDB().setAutoCommit(false);
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("INSERT INTO team values('%s')", team);
             
             stmnt.executeUpdate(query);
-            CreateConnection.createConnection().commit();
+            Connect.ConnectDB().commit();
         } catch (SQLException e) {
-            CreateConnection.createConnection().rollback();
+            Connect.ConnectDB().rollback();
             throw e;
         }
     }
@@ -99,7 +99,7 @@ public class Query {
     public static boolean updateMember(Register m) {        
         try {
             int active = (m.isActive()) ? 1 : 0;
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("UPDATE medlem SET givenName='%s', "
                     + "familyName='%s', email='%s', gender=%d, birth=%d, "
                     + "memberSince=%s, active=%d WHERE id = '%s'",
@@ -119,7 +119,7 @@ public class Query {
         ArrayList<String> teams = new ArrayList<>();
 
         try {
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT givenName FROM team");
             ResultSet rs = stmnt.executeQuery(query);
             
@@ -135,7 +135,7 @@ public class Query {
     public static Member getMemberWithId(String id) {
        Member m = new Member();
        try {
-           Statement stmnt = CreateConnection.createConnection().createStatement();
+           Statement stmnt = Connect.ConnectDB().createStatement();
            String query = String.format("SELECT * FROM medlem WHERE id='%s'", id);
            ResultSet rs = stmnt.executeQuery(query);
            
@@ -151,7 +151,7 @@ public class Query {
     public static ArrayList<Member> getMemberWithSurname(String familyName) {
         ArrayList<Member> am = new ArrayList<>();
         try {
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT * FROM medlem WHERE familyName='%s'", familyName);
             ResultSet rs = stmnt.executeQuery(query);
             
@@ -167,7 +167,7 @@ public class Query {
     public static ArrayList<Member> getAllMembers() {    
         ArrayList<Member> members = new ArrayList<>();
         try{
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT * FROM medlem");
             
             ResultSet rs = stmnt.executeQuery(query);
@@ -185,7 +185,7 @@ public class Query {
     public static ArrayList<String> getMemberTeamWithId(String id) {
         ArrayList<String> team = new ArrayList<>();
         try {
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT team FROM team_members WHERE mid='%s'", id);
             
             ResultSet rs = stmnt.executeQuery(query);
@@ -203,7 +203,7 @@ public class Query {
         boolean b = false;
         
         try {
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT id FROM parent WHERE id='%s'", id);
             
             ResultSet rs = stmnt.executeQuery(query);
@@ -221,7 +221,7 @@ public class Query {
         boolean b = false;
         
         try {
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT id FROM children WHERE id='%s'", id);
             
             ResultSet rs = stmnt.executeQuery(query);
@@ -237,7 +237,7 @@ public class Query {
         boolean b = false;
         
         try {
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT id FROM coach WHERE id='%s'", id);
             
             ResultSet rs = stmnt.executeQuery(query);
@@ -252,7 +252,7 @@ public class Query {
     public static ArrayList<Member> getMembersForTeam(String team) {
         ArrayList<Member> tm = new ArrayList<>();
         try {
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT * FROM medlem "
                     + "JOIN (team_members) ON (team='%s' AND mid=member.id)"
                     + "WHERE member.id NOT IN (select id from parent) AND"
@@ -271,7 +271,7 @@ public class Query {
     public static ArrayList<Member> getCoachesForTeam(String team) {
         ArrayList<Member> cm = new ArrayList<>();
         try {
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT * FROM medlem "
                     + "JOIN (SELECT id FROM coach WHERE team='%s') AS c ON (c.id=member.id)", team);
             
@@ -289,7 +289,7 @@ public class Query {
         ArrayList<Member> am = new ArrayList<>();
         
         try {
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT member.* FROM member" 
                     + " join(select parent.id from parent where parent.childid='%s') as pid"
                     + " on (pid.id=member.id)", id);
@@ -308,7 +308,7 @@ public class Query {
         ArrayList<Member> am = new ArrayList<>();
         
         try {
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT medlem.* FROM medlem" 
                     + " join(select children.id from children where children.parentid='%s') as cid"
                     + " on (cid.id=member.id)", id);
@@ -327,7 +327,7 @@ public class Query {
         ArrayList<String> ts = new ArrayList<>();
         
         try {
-            Statement stmnt = CreateConnection.createConnection().createStatement();
+            Statement stmnt = Connect.ConnectDB().createStatement();
             String query = String.format("SELECT distinct cid.team FROM medlem" 
                     + " join(select coach.id from coach where coach.id='%s') as cid"
                     + " on (cid.id=member.id)", id);
